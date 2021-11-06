@@ -1,0 +1,5 @@
+-   id: clear-ipynb-cells
+    name: Clear ipython notebooks cells.
+    description: Clears the output of notebooks before committing.
+    entry: clear-ipynb-cells
+    language: python
