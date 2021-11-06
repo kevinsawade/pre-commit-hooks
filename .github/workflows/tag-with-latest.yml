@@ -30,9 +30,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Tag with latest 🏷️
-          uses: EndBug/latest-tag@latest
-          with:
-            # If a description is provided, the action will use it to create an annotated tag.
-            # If none is given, the action will create a lightweight tag.
-            # Optional
-            description: This is the latest version of kevinsawade/pre-commit-hooks
+        uses: EndBug/latest-tag@latest
+        with:
+          # If a description is provided, the action will use it to create an annotated tag.
+          # If none is given, the action will create a lightweight tag.
+          # Optional
+          description: This is the latest version of kevinsawade/pre-commit-hooks
