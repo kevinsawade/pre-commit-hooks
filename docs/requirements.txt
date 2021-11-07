@@ -5,3 +5,4 @@ sphinx-copybutton
 sphinxcontrib-bibtex
 nbsphinx-link
 m2r2
+sphinx_rtd_theme_ext_color_contrast
