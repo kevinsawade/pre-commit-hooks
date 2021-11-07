@@ -1,1 +1,7 @@
+sphinx
+sphinxcontrib.yt
+nbsphinx
+sphinx-copybutton
+sphinxcontrib-bibtex
+nbsphinx-link
 m2r2
