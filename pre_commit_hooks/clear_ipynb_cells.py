@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import textwrap
 import sys
+import subprocess
 
 
 ################################################################################
@@ -37,7 +38,17 @@ class MyParser(argparse.ArgumentParser):
 
 
 def clear_notebooks(filenames: Sequence[str]) -> int:
-    pass
+    for filename in filenames:
+        if filename.endswith('ipynb'):
+            print(f"Clearing cells of {filename}")
+            cmd = (f'jupyter nbconvert --to notebook --clear-output --inplace {filename}')
+            return_code = subprocess.call(cmd.split())
+            if return_code != 0:
+                print(f"Failed to clear cells of notebook at {filename}.")
+                return return_code
+        else:
+            print(f"File {filename} is not a .ipynb file")
+    return 0
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
@@ -54,9 +65,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         'filenames', nargs='*',
         help='The files to run this pre-commit hook on.',
     )
-    args = parser.parse_args()
-    print(args)
-    return 1
+    args = parser.parse_args(argv)
+    return clear_notebooks(args.filenames)
 
 
 if __name__ == '__main__':

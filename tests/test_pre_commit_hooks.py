@@ -1,5 +1,4 @@
 import unittest
-import doctest
 import os
 import json
 
@@ -14,8 +13,25 @@ def is_notebook_executed(filepath):
         return False
 
 
+class TestPycodestyle(unittest.TestCase):
+
+    def test_pycodestyle(self):
+        from pre_commit_hooks.pycodestyle import run_pycodestyle
+
+        good_file = os.path.join(os.path.split(__file__)[0],
+                                 'data/example_py_document.py')
+        bad_file = os.path.join(os.path.split(__file__)[0],
+                                'data/example_py_document_2.py')
+
+        with self.assertRaises(SystemExit(1)):
+            run_pycodestyle([good_file, bad_file])
+
+        run_pycodestyle([good_file])
+
+
 class TestClearIpynbCells(unittest.TestCase):
 
+    @unittest.skip("devel")
     def test_clear_notebook(self):
         # imports
         import subprocess
@@ -44,11 +60,14 @@ class TestClearIpynbCells(unittest.TestCase):
         #     nbformat.write(nb, f)
 
         # define and open notebook
-        nb_file = os.path.join(os.path.split(__file__)[0],
-                               'data/example_notebook.ipynb')
-        self.assertTrue(is_notebook_executed(nb_file))
+        self.assertTrue(is_notebook_executed(nb_file1))
 
-        # clear the cells
-        cmd = (f'jupyter nbconvert --to notebook --clear-output --inplace {nb_file1}')
-        subprocess.call(cmd.split())
-        self.assertFalse(is_notebook_executed(nb_file))
+        # clear the cells with the script
+        from pre_commit_hooks.clear_ipynb_cells import clear_notebooks
+        clear_notebooks([nb_file1])
+
+        # make sure, that nb1 is not executed anymore
+        self.assertFalse(is_notebook_executed(nb_file1))
+
+        # the other one should still be executed.
+        self.assertTrue(is_notebook_executed(nb_file2))

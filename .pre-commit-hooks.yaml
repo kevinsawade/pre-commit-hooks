@@ -3,4 +3,4 @@
     description: Clears the output of notebooks before committing.
     entry: clear-ipynb-cells
     language: python
-    files: ipynb
+    files: 'ipynb'
