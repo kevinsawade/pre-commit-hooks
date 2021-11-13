@@ -1,6 +1,18 @@
+################################################################################
+# Imports
+################################################################################
+
+
 import unittest
 import os
 import json
+import glob
+import subprocess
+
+
+################################################################################
+# Utils
+################################################################################
 
 
 def is_notebook_executed(filepath):
@@ -8,25 +20,57 @@ def is_notebook_executed(filepath):
         contents = json.load(f)
     exec_str = 'execution_count'
     if any([exec_str in c for c in contents['cells']]):
-        return all([c[exec_str] is not None for c in contents['cells'] if exec_str in c])
+        check = [c[exec_str] is not None for c in contents['cells'] if exec_str in c]
+        return all(check)
     else:
         return False
+
+
+################################################################################
+# Unittest Classes
+################################################################################
+
+
+class TestPreCommitHooksGeneralDocstyle(unittest.TestCase):
+    FILES = glob.glob(os.path.join(os.path.split(os.path.split(__file__)[0])[0],
+                                   'pre_commit_hooks/*.py'))
+    SHEBANG = "#!/usr/bin/env python"
+
+    def test_starts_with_shebang(self):
+        for file in self.FILES:
+            if not os.path.basename(file).startswith('_'):
+                shebang = open(file).readline().rstrip()
+                self.assertEqual(self.SHEBANG, shebang)
 
 
 class TestPycodestyle(unittest.TestCase):
 
     def test_pycodestyle(self):
-        from pre_commit_hooks.pycodestyle import run_pycodestyle
+        import pre_commit_hooks.pycodestyle as module
+        from pre_commit_hooks.pycodestyle import run_pycodestyle, Capturing
 
         good_file = os.path.join(os.path.split(__file__)[0],
                                  'data/example_py_document.py')
         bad_file = os.path.join(os.path.split(__file__)[0],
                                 'data/example_py_document_2.py')
 
-        with self.assertRaises(SystemExit(1)):
-            run_pycodestyle([good_file, bad_file])
+        # calls
+        with Capturing() as output:
+            self.assertEqual(run_pycodestyle([good_file, bad_file]), 1)
+        self.assertEqual(run_pycodestyle([good_file]), 0)
 
-        run_pycodestyle([good_file])
+        # check output
+        output = ' '.join(output)
+        errors = ['E501', 'E201', 'E203', 'E225', 'E117', 'E713']
+        for e in errors:
+            self.assertIn(e, output)
+
+        # call script and assure system exit
+        proc = subprocess.call(f'{module.__file__} -filenames {good_file} '
+                               f'{bad_file}'.split())
+        print(proc.exit_code)
+        # with self.assertRaises(SystemExit):
+        #     run_pycodestyle([good_file, bad_file])
 
 
 class TestClearIpynbCells(unittest.TestCase):

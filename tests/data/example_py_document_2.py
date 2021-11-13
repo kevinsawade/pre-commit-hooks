@@ -142,7 +142,7 @@ def example_generator(n):
         Examples should be written in doctest format, and should illustrate how
         to use the function.
 
-        >>> print([i for i in example_generator(4)])
+        >>> print([ i for i in example_generator(4)])
         [0, 1, 2, 3]
 
     """
@@ -172,9 +172,12 @@ class ExampleError(Exception):
 
     """
 
-    def __init__(self, msg, code):
-        self.msg = msg
+    def __init__( self, msg, code) :
+        self.msg= msg
         self.code = code
+        while True:
+                print('''here''')
+                break
 
 
 class ExampleClass(object):

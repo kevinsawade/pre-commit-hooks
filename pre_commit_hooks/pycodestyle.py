@@ -1,3 +1,15 @@
+#!/usr/bin/env python
+"""Script that runs pycodestyle on a set of files.
+
+The Warnings (W) and Errors (E) will be printed and if no errors
+are raised, the script exists with exit code 0.
+
+"""
+################################################################################
+# Imports
+################################################################################
+
+
 from __future__ import  annotations
 import pycodestyle
 import sys
@@ -5,7 +17,18 @@ from io import StringIO
 import textwrap
 import argparse
 
+
+################################################################################
+# Typing
+################################################################################
+
+
 from typing import Optional, Sequence, List, Union, Tuple
+
+
+################################################################################
+# Utils
+################################################################################
 
 
 class Capturing(list):
@@ -24,6 +47,11 @@ class MyParser(argparse.ArgumentParser):
         sys.stderr.write('error: %s\n' % message)
         self.print_help()
         sys.exit(2)
+
+
+################################################################################
+# Main
+################################################################################
 
 
 def sort_w_and_e(strings: Sequence[str],
