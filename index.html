@@ -40,13 +40,13 @@
               <div class="local-toc"><ul>
 <li><a class="reference internal" href="#">pre-commit-hooks</a><ul>
 <li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#a-word-about-the-latest-tag">A word about the &#64;latest tag:</a><ul>
 <li><a class="reference internal" href="#installation-of-pre-commit">Installation of pre-commit</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#list-of-hooks">List of hooks</a><ul>
-<li><a class="reference internal" href="#clear-ipynb-cells"><code class="docutils literal notranslate"><span class="pre">clear-ipynb-cells</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#list-of-hooks">List of hooks</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
@@ -92,8 +92,12 @@
 </pre></div>
 </div>
 <p>and run <code class="docutils literal notranslate"><span class="pre">pre-commit</span> <span class="pre">install</span></code> in your repo to add these hooks.</p>
+<section id="a-word-about-the-latest-tag">
+<h3>A word about the &#64;latest tag:<a class="headerlink" href="#a-word-about-the-latest-tag" title="Permalink to this headline"></a></h3>
+<p>pre-commit doesn’t like the &#64;latest tag. I will also make normal releases following semantic versioning. It is up to you to update the revisions with tha latest versions, if &#64;latest is not working.</p>
+<p>The ‘rev’ field of repo ‘<a class="reference external" href="https://github.com/kevinsawade/pre-commit-hooks">https://github.com/kevinsawade/pre-commit-hooks</a>’ appears to be a mutable reference (moving tag / branch).  Mutable references are never updated after first install and are not supported.  See <a class="reference external" href="https://pre-commit.com/#using-the-latest-version-for-a-repository">https://pre-commit.com/#using-the-latest-version-for-a-repository</a> for more details.  Hint: <code class="docutils literal notranslate"><span class="pre">pre-commit</span> <span class="pre">autoupdate</span></code> often fixes this.</p>
 <section id="installation-of-pre-commit">
-<h3>Installation of pre-commit<a class="headerlink" href="#installation-of-pre-commit" title="Permalink to this headline"></a></h3>
+<h4>Installation of pre-commit<a class="headerlink" href="#installation-of-pre-commit" title="Permalink to this headline"></a></h4>
 <p>More info on: <a class="reference external" href="https://pre-commit.com/">https://pre-commit.com/</a></p>
 <ul class="simple">
 <li><p>Install pre-commit using pip:</p></li>
@@ -132,14 +136,12 @@
 </div>
 </section>
 </section>
+</section>
 <section id="list-of-hooks">
 <h2>List of hooks<a class="headerlink" href="#list-of-hooks" title="Permalink to this headline"></a></h2>
-<section id="clear-ipynb-cells">
-<h3><code class="docutils literal notranslate"><span class="pre">clear-ipynb-cells</span></code><a class="headerlink" href="#clear-ipynb-cells" title="Permalink to this headline"></a></h3>
 <p>Clears the code cells of ipython notebooks.</p>
 <div class="toctree-wrapper compound">
 </div>
-</section>
 </section>
 </section>
 <section id="indices-and-tables">
