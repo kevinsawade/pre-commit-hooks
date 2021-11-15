@@ -20,7 +20,8 @@ setup(name='pre_commit_hooks',
       url='https://github.com/kevinsawade/pre-commit-hooks',
       entry_points={
           'console_scripts': [
-              'clear-ipynb-cells = pre_commit_hooks.clear_ipynb_cells:main'
+              'clear-ipynb-cells = pre_commit_hooks.clear_ipynb_cells:main',
+              'run-pycodestyle = pre_commit_hooks.pycodestyle:main'
           ]
       },
       classifiers=[
