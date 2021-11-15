@@ -19,7 +19,7 @@ setup(name='pre_commit_hooks',
       install_requires=['pycodestyle',
                         'jupyter',
                         'notebook',
-                        'toml],
+                        'toml'],
       licesne_file='LICENSE',
       url='https://github.com/kevinsawade/pre-commit-hooks',
       entry_points={
