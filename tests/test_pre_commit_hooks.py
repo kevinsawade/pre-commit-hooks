@@ -94,7 +94,6 @@ class TestPycodestyle(unittest.TestCase):
 
 class TestClearIpynbCells(unittest.TestCase):
 
-    @unittest.skip("devel")
     def test_clear_notebook(self):
         # imports
         import subprocess

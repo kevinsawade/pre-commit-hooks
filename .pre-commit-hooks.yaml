@@ -6,14 +6,14 @@
     files: 'ipynb'
 
 -   id: run-pycodestyle
-    name: Run PyCQA's pycodestyle against all *.py files.
-    description: Runs pycodestyle. Can be configures in pyproject.toml
+    name: Run Pycodestyle.
+    description: Runs pyQCA's pycodestyle. Can be configures in pyproject.toml
     entry: run-pycodestyle
     language: python
     files: 'py'
 
 -   id: test-hook
-    name: A test hook, that will always succeed.
+    name: Test hook will auto-succeed.
     description: This test hook will print sys.argv and exit with code 0.
     entry: test-hook
     language: python
