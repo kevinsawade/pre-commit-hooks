@@ -66,4 +66,22 @@ pre-commit-run --all-files
 ## List of hooks
 
 ### `clear-ipynb-cells`
+
 Clears the code cells of ipython notebooks.
+
+### `run-pycodestyle`
+
+Runs pyCQA's pycodestyle against all *.py files. This hook can be configured. Especially the `max_line_length` might be useful for you. To configure this hook add these lines the project's `pyproject.toml`:
+
+```toml
+[tool.run_pycodestyle]
+excluded_lines = ['example_py_document_2.py:5']
+excluded_errors = ['E127']
+max_line_length = 90
+verbose = 5
+```
+- excluded_lines: A list of str. Every string defining filename:line_number.
+- excluded_errors: A list of PEP8 errors, that should not trigger pycodestyle to fail.
+- max_line_length: Increase the max_line_length that will trigger pycodestyle. Default is 79.
+- verbose: Different verbosity-levels from 0 to 5 are available.
+
