@@ -12,10 +12,13 @@ are raised, the script exists with exit code 0.
 
 from __future__ import  annotations
 import pycodestyle
+from pycodestyle import StyleGuide
 import sys
 from io import StringIO
 import textwrap
 import argparse
+import pathlib
+import toml
 
 
 ################################################################################
@@ -23,7 +26,8 @@ import argparse
 ################################################################################
 
 
-from typing import Optional, Sequence, List, Union, Tuple
+from typing import Optional, Sequence, List, Union, Tuple, Dict
+OptionsDict = Dict[str, Union[List[str], int, bool]]
 
 
 ################################################################################
@@ -55,59 +59,103 @@ class MyParser(argparse.ArgumentParser):
 
 
 def sort_w_and_e(strings: Sequence[str],
-                 filters: Optional[Union[Sequence[str], None]] = None
+                 excluded_lines: Optional[Union[Sequence[str], None]] = None,
+                 excluded_errors: Optional[Union[Sequence[str], None]] = None,
+                 verbose: int = 0
                  ) -> Tuple[List[str]]:
     warnings = []
     errors = []
 
-    if filters is None:
-        filters = []
+    if excluded_lines is None:
+        excluded_lines = []
+    if excluded_errors is None:
+        excluded_errors = []
 
     for line in strings:
         type_ = line.split()[1]
-        if type_.startswith('E') and not any([f in line for f in filters]):
+
+        # filter errors
+        if type_ in excluded_errors:
+            if verbose > 1:
+                print(f"Line {line} was excluded, because error was filtered.")
+            continue
+
+        # filter lines
+        if any([f in line for f in excluded_lines]):
+            if verbose > 1:
+                print(f"Line {line} was filtered.")
+            continue
+
+        if type_.startswith('E'):
             errors.append(line)
         elif type_.startswith('W'):
             warnings.append(line)
-        elif any([f in line for f in filters]):
-            print(f"Line with {line} was filtered.")
         else:
             raise Exception(f"Can not decide type ('E' or 'W') of line {line}")
 
     return warnings, errors
 
 
+def make_config(tomlfile: Optional[Union[str, None]] = None) -> OptionsDict:
+    defaults = {'excluded_lines': [], 'excluded_errors': [],
+                'max_line_length': 79, 'verbose': False}
+    if tomlfile is None:
+        toml_path = pathlib.Path("pyproject.toml").resolve()
+        if toml_path.is_file():
+            tomlfile = str(toml_path)
+
+    if tomlfile is not None:
+        with open(tomlfile) as f:
+            data = toml.load(f)
+        settings = data.get("tool", {}).get("run_pycodestyle", {})
+        defaults.update(settings)
+
+    return defaults
+
+
 def run_pycodestyle(filenames: Sequence[str],
-                    filters: Optional[Union[Sequence[str], None]] = None) -> int:
+                    tomlfile: Optional[Union[str, None]] = None) -> int:
     sum_errors = 0
     sum_warnings = 0
 
-    if filters is None:
-        filters = []
+    config = make_config(tomlfile)
 
     for file in filenames:
-        styleguide = pycodestyle.StyleGuide(max_line_length=90, verbose=0,
-                                            statistics=True, quiet=True)
+        styleguide = StyleGuide(max_line_length=config['max_line_length'],
+                                verbose=0,
+                                statistics=True,
+                                quiet=True)
         reporter = pycodestyle.StandardReport
         styleguide.init_report(reporter)
 
         with Capturing() as output:
             styleguide.input_file(file)
 
-        warnings, errors = sort_w_and_e(output, filters)
+        warnings, errors = sort_w_and_e(output,
+                                        excluded_lines=config['excluded_lines'],
+                                        excluded_errors=config['excluded_errors'],
+                                        verbose=config['verbose'])
         print(f"{len(warnings)} total warnings in {file}")
         sum_warnings += len(warnings)
 
         if len(errors) > 0:
-            for error in errors:
-                print(error)
-            print(f'\npycodestyle found {len(errors)} errors in the '
-                  f'path {file}.')
+            styleguide = StyleGuide(max_line_length=config['max_line_length'],
+                                    verbose=config['verbose'],
+                                    statistics=True,
+                                    quiet=config['verbose'] == 0)
+            reporter = pycodestyle.StandardReport
+            styleguide.init_report(reporter)
+
+            with Capturing() as output:
+                styleguide.input_file(file)
+
+            print('\n'.join(output))
+
             sum_errors += len(errors)
 
     if sum_errors > 0:
         print(f'\npycodestyle found a total of {sum_errors} errors in the '
-              f'paths {file}.')
+              f'paths {filenames}.')
         return 1
     else:
         print(f"pycodestyle found no errors and {sum_warnings} warnings.")
@@ -116,9 +164,9 @@ def run_pycodestyle(filenames: Sequence[str],
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     description = """\
-    pycodestyle.py
+    run_pycodestyle.py
 
-    A script to run pycodestyles automatically with pre-commit
+    A script to run pycodestyle automatically with pre-commit
 
     """
     description = textwrap.dedent(description)

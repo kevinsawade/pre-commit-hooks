@@ -1,0 +1,5 @@
+[tool.run_pycodestyle]
+excluded_lines = ['example_py_document_2.py:5']
+excluded_errors = ['E127']
+max_line_length = 90
+verbose = 5

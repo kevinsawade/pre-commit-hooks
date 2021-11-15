@@ -21,7 +21,8 @@ setup(name='pre_commit_hooks',
       entry_points={
           'console_scripts': [
               'clear-ipynb-cells = pre_commit_hooks.clear_ipynb_cells:main',
-              'run-pycodestyle = pre_commit_hooks.pycodestyle:main'
+              'run-pycodestyle = pre_commit_hooks.run_pycodestyle:main',
+              'test-hook = pre_commit_hooks.test_hooks_always_true:main'
           ]
       },
       classifiers=[

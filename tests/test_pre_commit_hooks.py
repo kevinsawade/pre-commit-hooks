@@ -46,13 +46,15 @@ class TestPreCommitHooksGeneralDocstyle(unittest.TestCase):
 class TestPycodestyle(unittest.TestCase):
 
     def test_pycodestyle(self):
-        import pre_commit_hooks.pycodestyle as module
-        from pre_commit_hooks.pycodestyle import run_pycodestyle, Capturing
+        import pre_commit_hooks.run_pycodestyle as module
+        from pre_commit_hooks.run_pycodestyle import run_pycodestyle, Capturing
 
         good_file = os.path.join(os.path.split(__file__)[0],
                                  'data/example_py_document.py')
         bad_file = os.path.join(os.path.split(__file__)[0],
                                 'data/example_py_document_2.py')
+        tomlfile =os.path.join(os.path.split(__file__)[0],
+                                'data/pyproject.toml')
 
         # calls
         with Capturing() as output:
@@ -61,16 +63,33 @@ class TestPycodestyle(unittest.TestCase):
 
         # check output
         output = ' '.join(output)
-        errors = ['E501', 'E201', 'E203', 'E225', 'E117', 'E713']
+        errors = ['E501', 'E201', 'E203', 'E225', 'E117', 'E713', 'E127']
         for e in errors:
             self.assertIn(e, output)
 
         # call script and assure system exit
-        proc = subprocess.call(f'{module.__file__} -filenames {good_file} '
-                               f'{bad_file}'.split())
-        print(proc.exit_code)
-        # with self.assertRaises(SystemExit):
-        #     run_pycodestyle([good_file, bad_file])
+        proc = subprocess.call(f'{module.__file__} {good_file} {bad_file}'.split())
+        self.assertNotEqual(0, proc)
+
+        # call script and assure system exit
+        proc = subprocess.call([f'{module.__file__}', f'{good_file}'])
+        self.assertEqual(0, proc)
+
+        # parse the toml to the script
+        with Capturing() as output:
+            out = run_pycodestyle([good_file, bad_file], tomlfile)
+        line1 = "E501 line too long (150 > 90 characters) was filtered."
+        line2 = "was excluded, because error was filtered."
+        line1 = any([line1 in line for line in output])
+        line2 = any([line2 in line for line in output])
+        self.assertEqual(out, 1)
+        self.assertTrue(line1)
+        self.assertTrue(line2)
+
+    def test_make_config_no_toml(self):
+        from pre_commit_hooks.run_pycodestyle import make_config
+        options = make_config()
+        self.assertTrue(options['verbose'])
 
 
 class TestClearIpynbCells(unittest.TestCase):
