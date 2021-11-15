@@ -18,6 +18,12 @@ repos:
 
 and run `pre-commit install` in your repo to add these hooks.
 
+#### A word about the @latest tag:
+
+pre-commit doesn't like the @latest tag. I will also make normal releases following semantic versioning. It is up to you to update the revisions with tha latest versions, if @latest is not working.
+
+The 'rev' field of repo 'https://github.com/kevinsawade/pre-commit-hooks' appears to be a mutable reference (moving tag / branch).  Mutable references are never updated after first install and are not supported.  See https://pre-commit.com/#using-the-latest-version-for-a-repository for more details.  Hint: `pre-commit autoupdate` often fixes this.
+
 ### Installation of pre-commit
 
 More info on: https://pre-commit.com/
