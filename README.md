@@ -1,3 +1,4 @@
+[![MadeWithLove](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/kevinsawade/bcd9d09bc682b4743b84fc6e967478ac/raw/endpoint.json)](https://www.chemie.uni-konstanz.de/ag-peter/)
 [![codecov](https://codecov.io/gh/kevinsawade/pre-commit-hooks/branch/main/graph/badge.svg?token=DXYC87BURG)](https://codecov.io/gh/kevinsawade/pre-commit-hooks)
 
 # pre-commit-hooks
