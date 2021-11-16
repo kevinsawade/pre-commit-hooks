@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/kevinsawade/pre-commit-hooks/branch/main/graph/badge.svg?token=DXYC87BURG)](https://codecov.io/gh/kevinsawade/pre-commit-hooks)
+
 # pre-commit-hooks
 
 My custom pre-commit hooks. Testing, Linting, Prettyfying.
