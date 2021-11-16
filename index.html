@@ -142,6 +142,8 @@
 <p>Clears the code cells of ipython notebooks.</p>
 <p>Runs pyCQA’s pycodestyle against all <a href="#id1"><span class="problematic" id="id2">*</span></a>.py files. This hook can be configured. Especially the <code class="docutils literal notranslate"><span class="pre">max_line_length</span></code> might be useful for you. To configure this hook add these lines the project’s <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>:</p>
 <div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[tool.run_pycodestyle]</span>
+<span class="n">paths</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">]</span>
+<span class="n">excluded_files</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;example_py_document_2.py&#39;</span><span class="p">]</span>
 <span class="n">excluded_lines</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;example_py_document_2.py:5&#39;</span><span class="p">]</span>
 <span class="n">excluded_errors</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;E127&#39;</span><span class="p">]</span>
 <span class="n">max_line_length</span> <span class="o">=</span> <span class="mi">90</span>
@@ -149,6 +151,8 @@
 </pre></div>
 </div>
 <ul class="simple">
+<li><p>paths: A list of string where the run-pycodestyle pre-commit hook will run.</p></li>
+<li><p>excluded_files: A list of files that run-pycodestyle should not run on.</p></li>
 <li><p>excluded_lines: A list of str. Every string defining filename:line_number.</p></li>
 <li><p>excluded_errors: A list of PEP8 errors, that should not trigger pycodestyle to fail.</p></li>
 <li><p>max_line_length: Increase the max_line_length that will trigger pycodestyle. Default is 79.</p></li>
