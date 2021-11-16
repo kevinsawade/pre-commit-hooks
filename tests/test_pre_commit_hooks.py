@@ -21,7 +21,7 @@ def is_notebook_executed(filepath):
     exec_str = 'execution_count'
     if any([exec_str in c for c in contents['cells']]):
         check = [c[exec_str] is not None for c in contents['cells'] if exec_str in c]
-        return all(check)
+        return any(check)
     else:
         return False
 
