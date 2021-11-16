@@ -110,7 +110,6 @@ class TestClearIpynbCells(unittest.TestCase):
     def test_clear_notebook(self):
         # imports
         import subprocess
-
         nb_file1 = os.path.join(os.path.split(__file__)[0],
                                'data/example_notebook.ipynb')
         nb_file2 = os.path.join(os.path.split(__file__)[0],
@@ -118,7 +117,8 @@ class TestClearIpynbCells(unittest.TestCase):
 
         # execute notebook with subprocess
         cmd = (f'jupyter nbconvert --to notebook --execute --inplace {nb_file1}')
-        subprocess.call(cmd.split())
+        print(f"Executing cmd {cmd}.")
+        subprocess.call(cmd, shell=True)
 
         # execute notebook with nbconvert API (might not work under Windows)
         # import nbformat
