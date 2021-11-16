@@ -19,6 +19,7 @@ import textwrap
 import argparse
 import pathlib
 import toml
+import os
 
 
 ################################################################################
@@ -33,6 +34,73 @@ OptionsDict = Dict[str, Union[List[str], int, bool]]
 ################################################################################
 # Utils
 ################################################################################
+
+def os_path_split_asunder(path: str, debug: bool = False) -> List[str]:
+    """
+    http://stackoverflow.com/a/4580931/171094
+    """
+    parts = []
+    while True:
+        newpath, tail = os.path.split(path)
+        if debug: print(repr(path), (newpath, tail))
+        if newpath == path:
+            assert not tail
+            if path: parts.append(path)
+            break
+        parts.append(tail)
+        path = newpath
+    parts.reverse()
+    return parts
+
+
+def is_subdirectory(potential_subdirectory: str,
+                    expected_parent_directory: str) -> bool:
+    """Is the first argument a sub-directory of the second argument?
+
+    :param potential_subdirectory:
+    :param expected_parent_directory:
+    :return: True if the potential_subdirectory is a child of the expected parent directory
+
+    >>> is_subdirectory('/var/test2', '/var/test')
+    False
+    >>> is_subdirectory('/var/test', '/var/test2')
+    False
+    >>> is_subdirectory('var/test2', 'var/test')
+    False
+    >>> is_subdirectory('var/test', 'var/test2')
+    False
+    >>> is_subdirectory('/var/test/sub', '/var/test')
+    True
+    >>> is_subdirectory('/var/test', '/var/test/sub')
+    False
+    >>> is_subdirectory('var/test/sub', 'var/test')
+    True
+    >>> is_subdirectory('var/test', 'var/test')
+    True
+    >>> is_subdirectory('var/test', 'var/test/fake_sub/..')
+    True
+    >>> is_subdirectory('var/test/sub/sub2/sub3/../..', 'var/test')
+    True
+    >>> is_subdirectory('var/test/sub', 'var/test/fake_sub/..')
+    True
+    >>> is_subdirectory('var/test', 'var/test/sub')
+    False
+    """
+
+    def _get_normalized_parts(path):
+        return os_path_split_asunder(os.path.realpath(
+            os.path.abspath(os.path.normpath(path))))
+
+    # make absolute and handle symbolic links, split into components
+    sub_parts = _get_normalized_parts(potential_subdirectory)
+    parent_parts = _get_normalized_parts(expected_parent_directory)
+
+    if len(parent_parts) > len(sub_parts):
+        # a parent directory never has more path segments than its child
+        return False
+
+    # we expect the zip to end with the short path, which we know to be the parent
+    return all(part1 == part2 for part1, part2 in zip(sub_parts, parent_parts))
 
 
 class Capturing(list):
@@ -97,8 +165,8 @@ def sort_w_and_e(strings: Sequence[str],
 
 
 def make_config(tomlfile: Optional[Union[str, None]] = None) -> OptionsDict:
-    defaults = {'excluded_lines': [], 'excluded_errors': [],
-                'max_line_length': 79, 'verbose': False}
+    defaults = {'excluded_lines': [], 'paths': None, 'excluded_files': [],
+                'excluded_errors': [], 'max_line_length': 79, 'verbose': False}
     if tomlfile is None:
         toml_path = pathlib.Path("pyproject.toml").resolve()
         if toml_path.is_file():
@@ -120,7 +188,16 @@ def run_pycodestyle(filenames: Sequence[str],
 
     config = make_config(tomlfile)
 
+    if config['paths'] is not None:
+        f = lambda x: True if any([i in x for i in config['paths']]) else False
+        filenames = list(filter(f, filenames))
+
+
     for file in filenames:
+        if os.path.basename(file) in config['excluded_files']:
+            if config['verbose'] >= 2:
+                print(f"Excluded file {file} due to chosen config.")
+            continue
         styleguide = StyleGuide(max_line_length=config['max_line_length'],
                                 verbose=0,
                                 statistics=True,

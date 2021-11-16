@@ -75,11 +75,15 @@ Runs pyCQA's pycodestyle against all *.py files. This hook can be configured. Es
 
 ```toml
 [tool.run_pycodestyle]
+paths = ['data']
+excluded_files = ['example_py_document_2.py']
 excluded_lines = ['example_py_document_2.py:5']
 excluded_errors = ['E127']
 max_line_length = 90
 verbose = 5
 ```
+- paths: A list of string where the run-pycodestyle pre-commit hook will run.
+- excluded_files: A list of files that run-pycodestyle should not run on.
 - excluded_lines: A list of str. Every string defining filename:line_number.
 - excluded_errors: A list of PEP8 errors, that should not trigger pycodestyle to fail.
 - max_line_length: Increase the max_line_length that will trigger pycodestyle. Default is 79.

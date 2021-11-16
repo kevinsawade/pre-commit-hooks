@@ -1,6 +1,6 @@
 [tool.run_pycodestyle]
 paths = ['data']
-excluded_files = ['example_py_document.py']
+excluded_files = ['example_py_document_2.py']
 excluded_lines = ['example_py_document_2.py:5']
 excluded_errors = ['E127']
 max_line_length = 90

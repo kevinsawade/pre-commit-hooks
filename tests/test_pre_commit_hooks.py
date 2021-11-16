@@ -53,8 +53,10 @@ class TestPycodestyle(unittest.TestCase):
                                  'data/example_py_document.py')
         bad_file = os.path.join(os.path.split(__file__)[0],
                                 'data/example_py_document_2.py')
-        tomlfile =os.path.join(os.path.split(__file__)[0],
+        tomlfile = os.path.join(os.path.split(__file__)[0],
                                 'data/pyproject.toml')
+        tomlfile2 = os.path.join(os.path.split(__file__)[0],
+                                'data/pyproject_2.toml')
 
         # calls
         with Capturing() as output:
@@ -86,10 +88,21 @@ class TestPycodestyle(unittest.TestCase):
         self.assertTrue(line1)
         self.assertTrue(line2)
 
+        with Capturing() as output:
+            out = run_pycodestyle([good_file, bad_file], tomlfile2)
+        self.assertEqual(out, 0)
+
     def test_make_config_no_toml(self):
         from pre_commit_hooks.run_pycodestyle import make_config
         options = make_config()
         self.assertTrue(options['verbose'])
+
+    def test_make_config_with_toml(self):
+        tomlfile = os.path.join(os.path.split(__file__)[0],
+                                'data/pyproject.toml')
+        from pre_commit_hooks.run_pycodestyle import make_config
+        options = make_config(tomlfile)
+        self.assertEqual(options['paths'], ['data'])
 
 
 class TestClearIpynbCells(unittest.TestCase):
