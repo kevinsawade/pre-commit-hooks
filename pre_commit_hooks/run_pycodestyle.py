@@ -145,7 +145,8 @@ def run_pycodestyle(filenames: Sequence[str],
                                         excluded_lines=config['excluded_lines'],
                                         excluded_errors=config['excluded_errors'],
                                         verbose=config['verbose'])
-        print(f"{len(warnings)} total warnings in {file}")
+        if config['verbose'] > 0:
+            print(f"{len(warnings)} total warnings in {file}")
         sum_warnings += len(warnings)
 
         if len(errors) > 0:
@@ -168,7 +169,9 @@ def run_pycodestyle(filenames: Sequence[str],
               f'paths {filenames}.')
         return 1
     else:
-        print(f"pycodestyle found no errors and {sum_warnings} warnings.")
+        if config['verbose'] > 1:
+            print(f"pycodestyle found no errors and {sum_warnings} warnings "
+                  f"in the paths {filenames}.")
         return 0
 
 

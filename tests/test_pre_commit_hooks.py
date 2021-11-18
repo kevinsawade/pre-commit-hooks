@@ -69,11 +69,11 @@ class TestPycodestyle(unittest.TestCase):
         for e in errors:
             self.assertIn(e, output)
 
-        # call script and assure system exit
+        # call script and assure system exit not 0
         proc = subprocess.call(f'{module.__file__} {good_file} {bad_file}'.split())
         self.assertNotEqual(0, proc)
 
-        # call script and assure system exit
+        # call script and assure system exit 0
         proc = subprocess.call([f'{module.__file__}', f'{good_file}'])
         self.assertEqual(0, proc)
 
