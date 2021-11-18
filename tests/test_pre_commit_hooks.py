@@ -45,6 +45,18 @@ class TestPreCommitHooksGeneralDocstyle(unittest.TestCase):
 
 class TestPycodestyle(unittest.TestCase):
 
+    def test_pycodestyle_parser(self):
+        from pre_commit_hooks.run_pycodestyle import MyParser
+        parser = MyParser(description='description', add_help=True)
+        parser.add_argument(
+            'filenames', nargs='*',
+            help='The files to run this pre-commit hook on.',
+        )
+        args = parser.parse_args(['all.tex', 'test.py'])
+        self.assertIn('all.tex', args.filenames)
+        with self.assertRaises(SystemExit):
+            args = parser.parse_args(['all.tex', 'test.py', '-test', 'lol'])
+
     def test_pycodestyle(self):
         import pre_commit_hooks.run_pycodestyle as module
         from pre_commit_hooks.run_pycodestyle import run_pycodestyle, Capturing
