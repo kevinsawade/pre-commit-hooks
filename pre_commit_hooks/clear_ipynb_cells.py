@@ -38,6 +38,8 @@ class MyParser(argparse.ArgumentParser):
 
 
 def clear_notebooks(filenames: Sequence[str]) -> int:
+    if not any([f.endswith('.ipynb') for f in filenames]):
+        return 1
     for filename in filenames:
         if filename.endswith('ipynb'):
             print(f"Clearing cells of {filename}")

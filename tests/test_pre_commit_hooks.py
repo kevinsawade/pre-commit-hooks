@@ -116,8 +116,26 @@ class TestClearIpynbCells(unittest.TestCase):
         )
         args = parser.parse_args(['all.tex', 'test.py'])
         self.assertIn('all.tex', args.filenames)
-        with self.assertRaises(Exception):
+        with self.assertRaises(SystemExit):
             args = parser.parse_args(['all.tex', 'test.py', '-test', 'lol'])
+
+    def test_call_clear_ipynb_cells(self):
+        import pre_commit_hooks.clear_ipynb_cells as module
+        nb_file1 = os.path.join(os.path.split(__file__)[0],
+                                'data/example_notebook.ipynb')
+        # call script and assure system exit not 0
+        proc = subprocess.call(f'{module.__file__} {module.__file__}'.split())
+        self.assertNotEqual(0, proc)
+
+        # call script and assure system exit 0
+        proc = subprocess.call([f'{module.__file__}', f'{nb_file1}'])
+        self.assertEqual(0, proc)
+
+    def test_exits_if_file_not_ipynb(self):
+        from pre_commit_hooks.clear_ipynb_cells import clear_notebooks
+        file = os.path.join(os.path.split(__file__)[0],
+                            'data/example_py_document.py')
+        clear_notebooks([file])
 
     def test_clear_notebook(self):
         # imports
