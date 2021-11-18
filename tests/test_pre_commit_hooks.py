@@ -36,7 +36,7 @@ class TestPreCommitHooksGeneralDocstyle(unittest.TestCase):
                                    'pre_commit_hooks/*.py'))
     SHEBANG = "#!/usr/bin/env python"
 
-    def test_starts_with_shebang(self):
+    def test_hooks_start_with_shebang(self):
         for file in self.FILES:
             if not os.path.basename(file).startswith('_'):
                 shebang = open(file).readline().rstrip()
@@ -106,6 +106,18 @@ class TestPycodestyle(unittest.TestCase):
 
 
 class TestClearIpynbCells(unittest.TestCase):
+
+    def test_clear_notebook_fails(self):
+        from pre_commit_hooks.clear_ipynb_cells import MyParser
+        parser = MyParser(description='description', add_help=True)
+        parser.add_argument(
+            'filenames', nargs='*',
+            help='The files to run this pre-commit hook on.',
+        )
+        args = parser.parse_args(['all.tex', 'test.py'])
+        self.assertIn('all.tex', args.filenames)
+        with self.assertRaises(Exception):
+            args = parser.parse_args(['all.tex', 'test.py', '-test', 'lol'])
 
     def test_clear_notebook(self):
         # imports
