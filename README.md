@@ -83,12 +83,19 @@ excluded_files = ['example_py_document_2.py']
 excluded_lines = ['example_py_document_2.py:5']
 excluded_errors = ['E127']
 max_line_length = 90
-verbose = 5
+verbose = 3
 ```
 - paths: A list of string where the run-pycodestyle pre-commit hook will run.
 - excluded_files: A list of files that run-pycodestyle should not run on.
 - excluded_lines: A list of str. Every string defining filename:line_number.
 - excluded_errors: A list of PEP8 errors, that should not trigger pycodestyle to fail.
 - max_line_length: Increase the max_line_length that will trigger pycodestyle. Default is 79.
-- verbose: Different verbosity-levels from 0 to 5 are available.
+- verbose: Different verbosity-levels from 0 to 5 are available. The same verbosity levels as pycodestyle are used, 
+  but in addition these messages are printed:
+  - level 0: Only print a message with errors, when pycodestyle fails.
+  - level 1: Print the number of warnings in each file and the total number of warnings once pycodestyle is finished.
+  - level 2: Print info about filters. Prints lines, files and errors that have been excluded due to the chosen options.
+  - level 3: Print an overview of pyproject.toml before running.
+  - level 4: Only affects the main pycodestyle code.
+  - level 5: Only affects the main pycodestyle code.
 

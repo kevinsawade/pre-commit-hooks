@@ -11,6 +11,9 @@ are raised, the script exists with exit code 0.
 
 
 from __future__ import  annotations
+
+import copy
+
 import pycodestyle
 from pycodestyle import StyleGuide
 import sys
@@ -92,7 +95,7 @@ def sort_w_and_e(strings: Sequence[str],
         elif type_.startswith('W'):
             warnings.append(line)
         else:
-            raise Exception(f"Can not decide type ('E' or 'W') of line {line}")
+            raise Exception(f"Can not decide type ('E' or 'W') of line {line}.")
 
     return warnings, errors
 
@@ -100,6 +103,7 @@ def sort_w_and_e(strings: Sequence[str],
 def make_config(tomlfile: Optional[Union[str, None]] = None) -> OptionsDict:
     defaults = {'excluded_lines': [], 'paths': None, 'excluded_files': [],
                 'excluded_errors': [], 'max_line_length': 79, 'verbose': False}
+    default_str = "Default values have been used."
     if tomlfile is None:
         toml_path = pathlib.Path("pyproject.toml").resolve()
         if toml_path.is_file():
@@ -110,6 +114,17 @@ def make_config(tomlfile: Optional[Union[str, None]] = None) -> OptionsDict:
             data = toml.load(f)
         settings = data.get("tool", {}).get("run_pycodestyle", {})
         defaults.update(settings)
+        default_str = f"Values have been loaded from {tomlfile}."
+
+    if defaults['verbose'] > 2:
+        print(f"Printing the settings for this run of pycodestyle:\n"
+              f"{default_str}:\n"
+              f"paths:           {defaults['paths']}\n"
+              f"excluded_lines:  {defaults['excluded_lines']}\n"
+              f"excluded_files:  {defaults['excluded_files']}\n"
+              f"excluded_errors: {defaults['excluded_errors']}\n"
+              f"max_line_length: {defaults['max_line_length']}\n"
+              f"verbose:         {defaults['verbose']}")
 
     return defaults
 
@@ -121,14 +136,22 @@ def run_pycodestyle(filenames: Sequence[str],
 
     config = make_config(tomlfile)
 
+    if config['verbose'] > 1:
+        print(f"Starting pycodestyle run on filenames {filenames}.")
+
     if config['paths'] is not None:
         f = lambda x: True if any([i in x for i in config['paths']]) else False
+        old_filenames = copy.deepcopy(filenames)
         filenames = list(filter(f, filenames))
+        filtered_filenames = set(old_filenames).difference(filenames)
+        if config['verbose'] > 1:
+            print(f"Due to the chosen 'paths' in pyproject.toml, these files"
+                  f"have been removed from this run: {filtered_filenames}")
 
 
     for file in filenames:
         if os.path.basename(file) in config['excluded_files']:
-            if config['verbose'] >= 2:
+            if config['verbose'] > 1:
                 print(f"Excluded file {file} due to chosen config.")
             continue
         styleguide = StyleGuide(max_line_length=config['max_line_length'],
@@ -169,7 +192,7 @@ def run_pycodestyle(filenames: Sequence[str],
               f'paths {filenames}.')
         return 1
     else:
-        if config['verbose'] > 1:
+        if config['verbose'] > 0:
             print(f"pycodestyle found no errors and {sum_warnings} warnings "
                   f"in the paths {filenames}.")
         return 0
