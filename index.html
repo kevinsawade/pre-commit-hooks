@@ -170,6 +170,20 @@ but in addition these messages are printed:</p>
 </ul>
 </li>
 </ul>
+<p>No, this is not a typo. This hook will search for a file called <code class="docutils literal notranslate"><span class="pre">tests/run_unittests.py</span></code> and execute this file. That’s
+why the run is doubled. Why choose this awkward contraption? I more than once encountered a problem where the
+sequence in which unittests were run mattered. I cimply could not make unittests work without sorting them first.
+This sorting can only be done, if the unittests are ran from a script, rather then the <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">unittest</span> <span class="pre">discover</span>
+<span class="pre">-s</span> <span class="pre">tests</span></code> command. That’s why my unittests are in scripts called <code class="docutils literal notranslate"><span class="pre">tests/run_unittests.py</span></code>. This hook runs the tests
+and asserts that all tests succeed before commiting.</p>
+<p>This hook runs coverage.py with the default command <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">unittests</span> <span class="pre">discover</span> <span class="pre">-s</span> <span class="pre">tests</span></code>. If a is specified, this
+file will be executed instead. This hook can be configured with the <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file and allows to set coverage
+thresholds.</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[tool.run_coverage]</span>
+<span class="n">threshold</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">file</span> <span class="o">=</span> <span class="s">&#39;tests/run_unittests.py&#39;</span>
+</pre></div>
+</div>
 <div class="toctree-wrapper compound">
 </div>
 </section>
