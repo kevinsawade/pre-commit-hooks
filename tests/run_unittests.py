@@ -1,7 +1,7 @@
 import unittest
 import os
 
-def unittests_not_leading_to_recursion(tests, method_substring='test_coverage'):
+def unittests_not_leading_to_recursion(tests, method_substring='test_coverage_with'):
     """Gives sorting keys for `unittest.TestSuite` instances based on a substring.
 
     Args:

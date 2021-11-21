@@ -15,6 +15,8 @@ import sys
 import os
 import importlib
 import coverage
+import textwrap
+import unittest
 
 
 ################################################################################
@@ -38,13 +40,51 @@ class MyParser(argparse.ArgumentParser):
         sys.exit(2)
 
 
+def unittests_not_leading_to_recursion(tests, method_substring='test_coverage_with'):
+    """Gives sorting keys for `unittest.TestSuite` instances based on a substring.
+
+    Args:
+        tests (unittest.TestSuite): The test-suite or sub-test suite to use
+            and return 1 if the substring is in the method names and 2 otherwise.
+
+    Keyword Args:
+        method_substring (str, optional): The substring that should be executed
+            first. Defaults to 'quickstart'.
+        even_higher_prio (list[str], optional): A list of strings that should have
+            even higher priority.
+
+    Returns:
+        int: Either 1 or 2 to be used in sorting.
+
+    """
+    if hasattr(tests, '__iter__'):
+        iterable = tests
+    else:
+        if method_substring in tests._testMethodName:
+            return False
+        else:
+            return True
+    for test in iterable:
+        if isinstance(test, SortableSuite):
+            test.sort()
+        else:
+            raise NotImplementedError()
+    return True
+
+
+class SortableSuite(unittest.TestSuite):
+    def sort(self):
+        if hasattr(self, '_tests'):
+            self._tests = list(filter(unittests_not_leading_to_recursion, self._tests))
+
+
 ################################################################################
 # Main
 ################################################################################
 
 
 def make_config(tomlfile: Optional[Union[str, None]] = None) -> OptionsDict:
-    defaults = {'threshold': 100, 'file': None, 'verbose': False}
+    defaults = {'threshold': 100, 'file': None, 'verbose': False, 'testing': False}
     default_str = "Default values have been used."
     if tomlfile is None:
         toml_path = pathlib.Path("pyproject.toml").resolve()
@@ -88,7 +128,24 @@ def run_coverage(tomlfile: Optional[Union[str, None]] = None) -> int:
         else:
             return 1
     else:
-        raise NotImplementedError()
+        loader = unittest.TestLoader()
+        if config['testing']:
+            loader.suiteClass = SortableSuite
+        test_suite = loader.discover(start_dir=os.getcwd(),
+                                     top_level_dir=os.path.split(os.getcwd())[0])
+        if config['testing']:
+            test_suite.sort()
+        runner = unittest.TextTestRunner(verbosity=config['verbose'])
+        cov = coverage.Coverage(cover_pylib=False)
+        cov.start()
+        result = runner.run(test_suite)
+        cov.stop()
+        cov_percentage = cov.report()
+
+        if cov_percentage > config['threshold']:
+            return 0
+        else:
+            return 1
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:  # pragma: no cover

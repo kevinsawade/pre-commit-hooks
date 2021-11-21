@@ -9,3 +9,7 @@ verbose = true
 
 [tool.run_pycodestyle]
 verbose = true
+
+[tool.run_coverage]
+verbose = 3
+testing = true
