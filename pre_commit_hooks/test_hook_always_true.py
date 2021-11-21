@@ -17,7 +17,7 @@ import sys
 ################################################################################
 
 
-def main() -> int:
+def main() -> int:  # pragma: no cover
     print(sys.argv[1:])
     return 0
 

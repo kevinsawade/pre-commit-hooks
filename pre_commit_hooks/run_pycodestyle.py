@@ -10,7 +10,7 @@ are raised, the script exists with exit code 0.
 ################################################################################
 
 
-from __future__ import  annotations
+from __future__ import annotations
 
 import copy
 
@@ -114,7 +114,7 @@ def make_config(tomlfile: Optional[Union[str, None]] = None) -> OptionsDict:
             data = toml.load(f)
         settings = data.get("tool", {}).get("run_pycodestyle", {})
         defaults.update(settings)
-        default_str = f"Values have been loaded from {tomlfile}."
+        default_str = f"Values have been loaded from {tomlfile}"
 
     if defaults['verbose'] > 2:
         print(f"Printing the settings for this run of pycodestyle:\n"
@@ -145,8 +145,9 @@ def run_pycodestyle(filenames: Sequence[str],
         filenames = list(filter(f, filenames))
         filtered_filenames = set(old_filenames).difference(filenames)
         if config['verbose'] > 1:
-            print(f"Due to the chosen 'paths' in pyproject.toml, these files"
-                  f"have been removed from this run: {filtered_filenames}")
+            print(f"Due to the chosen 'paths' in pyproject.toml, these files "
+                  f"have been removed from this run: {filtered_filenames} "
+                  f"and only these files are considered: {filenames}")
 
 
     for file in filenames:
@@ -198,7 +199,7 @@ def run_pycodestyle(filenames: Sequence[str],
         return 0
 
 
-def main(argv: Optional[Sequence[str]] = None) -> int:
+def main(argv: Optional[Sequence[str]] = None) -> int:  # pragma: no cover
     description = """\
     run_pycodestyle.py
 

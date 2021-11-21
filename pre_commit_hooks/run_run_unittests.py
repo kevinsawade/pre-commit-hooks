@@ -1,13 +1,15 @@
 #!/usr/bin/env python
-"""Script that clears ipynb cell outputs before committing."""
+"""Script that searches for `tests/run_unittests.py` and executes that script.
+
+"""
 ################################################################################
 # Imports
 ################################################################################
 
 
 from __future__ import annotations
-import argparse
 import textwrap
+import argparse
 import sys
 import subprocess
 
@@ -17,16 +19,17 @@ import subprocess
 ################################################################################
 
 
-from typing import Optional, Sequence
+from typing import Optional, Sequence, List, Union, Tuple, Dict
+OptionsDict = Dict[str, Union[List[str], int, bool]]
 
 
 ################################################################################
-# Custom Argparse
+# Utils
 ################################################################################
 
 
 class MyParser(argparse.ArgumentParser):
-    def error(self, message):
+    def error(self, message: str) -> None:
         sys.stderr.write('error: %s\n' % message)
         self.print_help()
         sys.exit(2)
@@ -37,28 +40,16 @@ class MyParser(argparse.ArgumentParser):
 ################################################################################
 
 
-def clear_notebooks(filenames: Sequence[str]) -> int:
-    if not any([f.endswith('.ipynb') for f in filenames]):
-        return 1
-    for filename in filenames:
-        if filename.endswith('ipynb'):
-            print(f"Clearing cells of {filename}")
-            cmd = (f'jupyter nbconvert --to notebook --clear-output --inplace {filename}')
-            return_code = subprocess.call(cmd.split())
-            if return_code != 0:
-                print(f"Failed to clear cells of notebook at {filename}.")
-                return return_code
-        else:
-            print(f"File {filename} is not a .ipynb file")
-    return 0
+def run_run_unittests() -> int:
+    proc = subprocess.call(['python', 'tests/run_unittests.py'])
+    return proc
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:  # pragma: no cover
     description = """\
-    clear_ipynb_cells.py:
+    run_run_unittests.py
 
-    A script to clear the cells in .ipynb files. Especially useful as a
-    pre-commit hook to clear notebooks before commit/push.
+    A script to run pycodestyle automatically with pre-commit
 
     """
     description = textwrap.dedent(description)
@@ -68,7 +59,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:  # pragma: no cover
         help='The files to run this pre-commit hook on.',
     )
     args = parser.parse_args(argv)
-    return clear_notebooks(args.filenames)
+    return run_run_unittests()
 
 
 if __name__ == '__main__':
