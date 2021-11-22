@@ -8,7 +8,7 @@ sort_by_size = true
 verbose = true
 
 [tool.coverage.report]
-omit = ['tests/']
+omit = ['*tests*']
 
 [tool.run_pycodestyle]
 verbose = true
