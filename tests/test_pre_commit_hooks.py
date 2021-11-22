@@ -180,6 +180,12 @@ class TestClearIpynbCells(unittest.TestCase):
         with self.assertRaises(SystemExit):
             args = parser.parse_args(['all.tex', 'test.py', '-test', 'lol'])
 
+    def test_clear_notebook_fails_with_corrupted(self):
+        from pre_commit_hooks.clear_ipynb_cells import clear_notebooks
+        corrupted_nb = os.path.join(os.path.split(__file__)[0],
+                                    'data/corrupted_ipynb_file.ipynb.ipynb')
+        self.assertNotEqual(0, clear_notebooks([corrupted_nb]))
+
     def test_call_clear_ipynb_cells(self):
         import pre_commit_hooks.clear_ipynb_cells as module
         nb_file1 = os.path.join(os.path.split(__file__)[0],
