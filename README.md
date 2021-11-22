@@ -103,10 +103,10 @@ verbose = 3
 
 No, this is not a typo. This hook will search for a file called `tests/run_unittests.py` and execute this file. That's 
 why the run is doubled. Why choose this awkward contraption? I more than once encountered a problem where the 
-sequence in which unittests were run mattered. I cimply could not make unittests work without sorting them first. 
+sequence in which unittests were run mattered. I simply could not make unittests work without sorting them first. 
 This sorting can only be done, if the unittests are ran from a script, rather then the `python -m unittest discover 
 -s tests` command. That's why my unittests are in scripts called `tests/run_unittests.py`. This hook runs the tests 
-and asserts that all tests succeed before commiting.
+and asserts that all tests succeed before committing.
 
 ### `run-coverage`
 
