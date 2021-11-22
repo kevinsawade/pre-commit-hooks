@@ -7,6 +7,9 @@ min_confidence = 80
 sort_by_size = true
 verbose = true
 
+[tool.coverage.report]
+omit = ['tests/']
+
 [tool.run_pycodestyle]
 verbose = true
 

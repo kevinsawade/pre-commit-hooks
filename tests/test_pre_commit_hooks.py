@@ -54,6 +54,18 @@ class TestRunRunUnittests(unittest.TestCase):
         proc = subprocess.call([f'{module.__file__}'])
         self.assertEqual(0, proc)
 
+    def test_unittests_myparser(self):
+        from pre_commit_hooks.run_run_unittests import MyParser
+        parser = MyParser(description='description', add_help=True)
+        parser.add_argument(
+            'filenames', nargs='*',
+            help='The files to run this pre-commit hook on.',
+        )
+        args = parser.parse_args(['all.tex', 'test.py'])
+        self.assertIn('all.tex', args.filenames)
+        with self.assertRaises(SystemExit):
+            args = parser.parse_args(['all.tex', 'test.py', '-test', 'lol'])
+
 
 class TestRunCoverage(unittest.TestCase):
 
