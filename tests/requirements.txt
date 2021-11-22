@@ -2,3 +2,4 @@ notebook
 jupyter
 nbconvert
 ipykernel
+toml
