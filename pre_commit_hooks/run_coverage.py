@@ -40,7 +40,8 @@ class MyParser(argparse.ArgumentParser):
         sys.exit(2)
 
 
-def unittests_not_leading_to_recursion(tests, method_substring='test_coverage_with'):
+def unittests_not_leading_to_recursion(tests,
+                                       method_substring='test_coverage_with'):
     """Gives sorting keys for `unittest.TestSuite` instances based on a substring.
 
     Args:
@@ -75,7 +76,8 @@ def unittests_not_leading_to_recursion(tests, method_substring='test_coverage_wi
 class SortableSuite(unittest.TestSuite):
     def sort(self):
         if hasattr(self, '_tests'):
-            self._tests = list(filter(unittests_not_leading_to_recursion, self._tests))
+            self._tests = list(filter(unittests_not_leading_to_recursion,
+                                      self._tests))
 
 
 ################################################################################
@@ -84,7 +86,8 @@ class SortableSuite(unittest.TestSuite):
 
 
 def make_config(tomlfile: Optional[Union[str, None]] = None) -> OptionsDict:
-    defaults = {'threshold': 100, 'file': None, 'verbose': False, 'testing': False}
+    defaults = {'threshold': 100, 'file': None,
+                'verbose': False, 'testing': False}
     default_str = "Default values have been used."
     if tomlfile is None:
         toml_path = pathlib.Path("pyproject.toml").resolve()
@@ -145,6 +148,8 @@ def run_coverage(tomlfile: Optional[Union[str, None]] = None) -> int:
         if cov_percentage > config['threshold']:
             return 0
         else:
+            print(f"Coverage ({cov_percentage:.2f}%) is smaller than threshold "
+                  f"({config['threshold']}). Exiting.")
             return 1
 
 
@@ -159,7 +164,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:  # pragma: no cover
     parser = MyParser(description=description, add_help=True)
     parser.add_argument(
         'filenames', nargs='*',
-        help='The files to run this pre-commit hook on.',
+        help='The files to run this pre-commit hook on.'
     )
     args = parser.parse_args(argv)
     return run_coverage()

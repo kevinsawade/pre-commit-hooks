@@ -66,7 +66,7 @@ def sort_w_and_e(strings: Sequence[str],
                  excluded_lines: Optional[Union[Sequence[str], None]] = None,
                  excluded_errors: Optional[Union[Sequence[str], None]] = None,
                  verbose: int = 0
-                 ) -> Tuple[List[str]]:
+                 ) -> Tuple[List[str], List[str]]:
     warnings = []
     errors = []
 

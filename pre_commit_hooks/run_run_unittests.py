@@ -58,7 +58,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:  # pragma: no cover
         'filenames', nargs='*',
         help='The files to run this pre-commit hook on.',
     )
-    args = parser.parse_args(argv)
+    if argv is not None:
+        args = parser.parse_args(argv)
     return run_run_unittests()
 
 

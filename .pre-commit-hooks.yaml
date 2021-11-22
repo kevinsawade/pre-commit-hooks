@@ -1,19 +1,31 @@
--   id: clear-ipynb-cells
-    name: Clear ipython notebooks cells.
-    description: Clears the output of notebooks before committing.
-    entry: clear-ipynb-cells
-    language: python
-    files: 'ipynb'
+-  id: clear-ipynb-cells
+  name: Clear ipython notebooks cells.
+  description: Clears the output of notebooks before committing.
+  entry: clear-ipynb-cells
+  language: python
+  files: 'ipynb'
 
--   id: run-pycodestyle
-    name: Run Pycodestyle.
-    description: Runs pyQCA's pycodestyle. Can be configures in pyproject.toml
-    entry: run-pycodestyle
-    language: python
-    files: 'py'
+-  id: run-pycodestyle
+  name: Run Pycodestyle.
+  description: Runs pyQCA's pycodestyle. Can be configures in pyproject.toml
+  entry: run-pycodestyle
+  language: python
+  files: 'py'
 
--   id: test-hook
-    name: Test hook will auto-succeed.
-    description: This test hook will print sys.argv and exit with code 0.
-    entry: test-hook
-    language: python
+-  id: test-hook
+  name: Test hook will auto-succeed.
+  description: This test hook will print sys.argv and exit with code 0.
+  entry: test-hook
+  language: python
+
+- id: run-run-unittests
+  name: Unittests
+  description: This hook will execute the main() function in tests/run_unittests.py
+  entry: run-run-unittests
+  language: python
+
+- id: run-coverage
+  name: Checking coverage
+  description: This hook will run coverage run -m unittest discover dir, where dir and coverage threshold can be configured in pyproject.toml
+  entry: run-coverage
+  language: python

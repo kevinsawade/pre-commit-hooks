@@ -50,28 +50,10 @@ def main(verbosity=0):
     if not result.wasSuccessful():
         exit(1)
 
-    # stuff with coverage and HTMLtestrunner
-    # output to a file
-    # now = datetime.now().astimezone().replace(microsecond=0).isoformat()
-    # runner = HtmlTestRunner.HTMLTestRunner(
-    #     output='../docs/source/_static/',
-    #     report_title=f'EncoderMap Unittest Report at {now}',
-    #     report_name='html_test_runner_report',
-    #     combine_reports=True,
-    #     add_timestamp=False,
-    #     buffer=True
-    # )
-    #
-    # # run the test
-    # cov = coverage.Coverage(cover_pylib=False)
-    # cov.start()
-    # result = runner.run(test_suite)
-    # cov.stop()
-    # omit = ['*Test*', '*test*', '*/usr/local/lib*', '*Users*', '*__init__*']
-    # cov_percentage = cov.html_report(directory='../docs/source/_static', title='coverage_report', omit=omit)
-    #
-    # print("Unittest Result:", result.wasSuccessful())
-    # print("Coverage Percentage:", cov_percentage)
-
+# needed for unittesting
+# do not copy this part of the script
+# in correct development environments the main function should be called here
+# if __name++ == '__main__':
+#     main()
 if __name__ == '__main__':
     raise SystemExit(0)
