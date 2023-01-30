@@ -26,6 +26,7 @@ setup(name='pre_commit_hooks',
       entry_points={
           'console_scripts': [
               'clear-ipynb-cells = pre_commit_hooks.clear_ipynb_cells:main',
+              'run-ipynb = pre_commit_hooks.run_notebooks:main'
               'run-pycodestyle = pre_commit_hooks.run_pycodestyle:main',
               'test-hook = pre_commit_hooks.test_hooks_always_true:main',
               'run-run-unittests = pre_commit_hooks.run_run_unittests:main',
