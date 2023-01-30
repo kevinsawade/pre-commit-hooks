@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Script that clears ipynb cell outputs before committing."""
+"""Script that runs ipython notebooks committing."""
 ################################################################################
 # Imports
 ################################################################################
@@ -37,7 +37,7 @@ class MyParser(argparse.ArgumentParser):
 ################################################################################
 
 
-def clear_notebooks(filenames: Sequence[str]) -> int:
+def run_notebooks(filenames: Sequence[str]) -> int:
     if not any([f.endswith('.ipynb') for f in filenames]):
         return 1
     for filename in filenames:
@@ -55,9 +55,9 @@ def clear_notebooks(filenames: Sequence[str]) -> int:
 
 def main(argv: Optional[Sequence[str]] = None) -> int:  # pragma: no cover
     description = """\
-    clear_ipynb_cells.py:
-    A script to clear the cells in .ipynb files. Especially useful as a
-    pre-commit hook to clear notebooks before commit/push.
+    run_notebooks.py:
+    A script to run all .ipynb files. Especially useful as a
+    pre-commit hook to run notebooks before commit/push.
     """
     description = textwrap.dedent(description)
     parser = MyParser(description=description, add_help=True)
