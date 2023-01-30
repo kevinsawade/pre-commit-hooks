@@ -4,6 +4,13 @@
   entry: clear-ipynb-cells
   language: python
   files: 'ipynb'
+  
+-  id: run-ipynb
+  name: Run ipython notebooks.
+  description: Runs all ipython notebooks in files
+  entry: run-ipynb
+  language: python
+  files: 'ipynb'
 
 -  id: run-pycodestyle
   name: Run Pycodestyle.
