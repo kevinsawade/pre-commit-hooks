@@ -43,5 +43,5 @@
   entry: assert-version-advance
   language: python
   stages:
-    - pre-push
+    - push
   args: [--branch=main, --remote=origin]
