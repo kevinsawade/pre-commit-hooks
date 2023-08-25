@@ -6,7 +6,7 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
 # read the version
-exec(open('pre_commit_hooks/_version.py').read())
+exec(Path('pre_commit_hooks/_version.py').read_text())
 
 setup(name='pre_commit_hooks',
       version=__version__,
@@ -30,7 +30,8 @@ setup(name='pre_commit_hooks',
               'run-pycodestyle = pre_commit_hooks.run_pycodestyle:main',
               'test-hook = pre_commit_hooks.test_hooks_always_true:main',
               'run-run-unittests = pre_commit_hooks.run_run_unittests:main',
-              'run-coverage = pre_commit_hooks.run_coverage:main'
+              'run-coverage = pre_commit_hooks.run_coverage:main',
+              'assert-version-advance = pre_commit_hooks.assert_version_advance:main',
           ]
       },
       classifiers=[

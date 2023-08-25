@@ -129,6 +129,9 @@ def run_coverage(tomlfile: Optional[Union[str, None]] = None) -> int:
         if cov_percentage > config['threshold']:
             return 0
         else:
+            print(
+                f"Coverage percentage below threshold cov: {cov_percentage}% "
+                f"< thresh: {config['threshold']}%")
             return 1
     else:
         loader = unittest.TestLoader()

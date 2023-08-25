@@ -36,3 +36,12 @@
   description: This hook will run coverage run -m unittest discover dir, where dir and coverage threshold can be configured in pyproject.toml
   entry: run-coverage
   language: python
+
+- id: assert-version-advance
+  name: Registered tag that can be semver. Asserting advance of version.
+  description: This hook detects, whether a new tag has been added and then checks, if the semantic version of the project has been advanced correctly.
+  entry: assert-version-advance
+  language: python
+  stages:
+    - pre-push
+  args: [--branch=main, --remote=origin]

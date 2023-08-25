@@ -4,6 +4,7 @@
 
 
 import unittest
+from pathlib import Path
 import os
 import json
 import glob
@@ -65,6 +66,13 @@ class TestRunRunUnittests(unittest.TestCase):
         self.assertIn('all.tex', args.filenames)
         with self.assertRaises(SystemExit):
             args = parser.parse_args(['all.tex', 'test.py', '-test', 'lol'])
+
+
+class TestAssertVersionAdvance(unittest.TestCase):
+    def test_assert_version_advance(self):
+        from pre_commit_hooks.assert_version_advance import assert_version_advance
+        result = assert_version_advance([])
+        self.assertEqual(result, 0, msg=f"The result of `assert_version_advance` is {result}")
 
 
 class TestRunCoverage(unittest.TestCase):

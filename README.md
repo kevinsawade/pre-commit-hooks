@@ -72,6 +72,30 @@ pre-commit-run --all-files
 
 Clears the code cells of ipython notebooks.
 
+### `assert-version-advance`
+
+*(Only works with python packages).*
+
+This hook is a **pre-push** hook. It ensures two things:
+
+- Make sure, that the local version pushed to remote is equal or higher to the greatest version in remote.
+- Make sure, that the version of the software and the highest local tag are the same version.
+
+Enable this hook by including it into your `.pre-commit-hooks.yaml` like so:
+
+```yaml
+repos:
+  - repo: https://github.com/kevinsawade/pre-commit-hooks
+    rev: latest
+    hooks:
+      - id: assert-version-advance
+      args: [--branch=master, --remote=public]
+```
+
+The additional args define the name of your main branch (i.e. the branch from which new version tags are created). And the name of the remote from which the software is distributed. In this example, the old default branch name `master` is used. The `public` is the name of the remote (in contrast to a private remote, like a self-hosted GitLab).
+
+
+
 ### `run-pycodestyle`
 
 Runs pyCQA's pycodestyle against all *.py files. This hook can be configured. Especially the `max_line_length` might be useful for you. To configure this hook add these lines the project's `pyproject.toml`:

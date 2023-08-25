@@ -1,7 +1,12 @@
 import unittest
 import os
 
-def unittests_not_leading_to_recursion(tests, method_substring='test_coverage_with'):
+FORBIDDEN_METHODS = [
+    "test_coverage_with",
+    "test_assert_version_advance",
+]
+
+def unittests_not_leading_to_recursion(tests):
     """Gives sorting keys for `unittest.TestSuite` instances based on a substring.
 
     Args:
@@ -21,7 +26,7 @@ def unittests_not_leading_to_recursion(tests, method_substring='test_coverage_wi
     if hasattr(tests, '__iter__'):
         iterable = tests
     else:
-        if method_substring in tests._testMethodName:
+        if any([f in tests._testMethodName for f in FORBIDDEN_METHODS]):
             return False
         else:
             return True
@@ -44,8 +49,9 @@ def main(verbosity=0):
     test_suite = loader.discover(start_dir=os.getcwd(),
                                  top_level_dir=os.path.split(os.getcwd())[0])
     test_suite.sort()
-    runner = unittest.TextTestRunner(verbosity=verbosity)
-    result = runner.run(test_suite)
+    # runner = unittest.TextTestRunner(verbosity=verbosity)
+    result = unittest.result.TestResult()
+    test_suite.run(result)
     print("Unittest result: ", result.wasSuccessful())
     if not result.wasSuccessful():
         exit(1)
