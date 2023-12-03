@@ -52,6 +52,9 @@ repos:
     rev: latest
     hooks:
       - id: clear-ipynb-cells
+      # this is needed, because notebook 7 broke nbconvert which this
+      # hook uses to clear ipynb cells
+      additional_dependencies: ["notebook==6.4.12", "traitlets==5.9.0"] 
 ```
 
 - Install the git hook scripts
