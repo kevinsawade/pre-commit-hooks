@@ -43,7 +43,7 @@ def clear_notebooks(filenames: Sequence[str]) -> int:
     for filename in filenames:
         if filename.endswith('ipynb'):
             print(f"Clearing cells of {filename}")
-            cmd = (f'jupyter nbconvert --to notebook --clear-output --ClearOutputPreprocessor.enabled=True --ClearMetadataPreprocessor.enabled=True --inplace {filename}')
+            cmd = (f'jupyter nbconvert --to notebook --clear-output --ClearOutputPreprocessor.enabled=True --inplace {filename}')
             return_code = subprocess.call(cmd.split())
             if return_code != 0:
                 print(f"Failed to clear cells of notebook at {filename}.")
